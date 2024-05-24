@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Mood Classifier</title>
+</head>
+<body>
+    <h1>Music Mood Classifier</h1>
+    <form action="/recommend-songs" method="GET">
+        <label for="mood">Select your mood:</label>
+        <select name="mood" id="mood">
+            <option value="Happy">Happy</option>
+            <option value="Sad">Sad</option>
+            <option value="Energetic">Energetic</option>
+            <option value="Calm">Calm</option>
+        </select>
+        <button type="submit">Get Recommendations</button>
+    </form>
+
+    <h2>Recommended Songs</h2>
+    <ul id="recommended-songs"></ul>
+
+    <script>
+        document.querySelector('form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const mood = document.getElementById('mood').value;
+            const response = await fetch(`/recommend-songs?mood=${mood}`);
+            const data = await response.json();
+            const recommendedSongs = data.recommended_songs;
+            const recommendedSongsList = document.getElementById('recommended-songs');
+            recommendedSongsList.innerHTML = '';
+            recommendedSongs.forEach(song => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${song.name} - ${song.artist}`;
+                recommendedSongsList.appendChild(listItem);
+            });
+        });
+    </script>
+</body>
+</html>
